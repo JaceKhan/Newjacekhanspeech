@@ -404,7 +404,7 @@ function App() {
                   <div style={{ color: '#aaa', fontSize: 14, marginBottom: 18 }}>등록된 학생이 없습니다.</div>
                 ) : (
                   <ul style={{ listStyle: 'none', padding: 0, margin: 0, marginBottom: 18 }}>
-                    {students.map((student, idx) => (
+                    {students.map((student) => (
                       <li key={student.id} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6, background: '#f7f8fc', borderRadius: 7, padding: '6px 10px' }}>
                         <span style={{ fontSize: 15, color: '#5b8cff', fontWeight: 600 }}>{student.name}</span>
                         <button
@@ -423,7 +423,7 @@ function App() {
                   <div style={{ marginBottom: 18 }}>
                     <div style={{ fontWeight: 600, fontSize: 15, marginBottom: 6 }}>학생별 음성파일 할당</div>
                     <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                      {students.map((student, idx) => (
+                      {students.map((student) => (
                         <li key={student.id} style={{ marginBottom: 16, background: '#f7f8fc', borderRadius: 7, padding: '10px 12px' }}>
                           <div style={{ fontWeight: 600, color: '#5b8cff', marginBottom: 6 }}>{student.name}</div>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
@@ -636,7 +636,7 @@ function App() {
                     <div style={{ color: '#aaa', fontSize: 14 }}>녹음된 파일이 없습니다.</div>
                   ) : (
                     <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                      {recordings.map((rec, idx) => (
+                      {recordings.map((rec) => (
                         <li key={rec.url} style={{ marginBottom: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
                           <audio src={rec.url} controls style={{ width: 160 }} />
                           <span style={{ fontSize: 13, color: '#888' }}>{rec.date}</span>
@@ -654,7 +654,7 @@ function App() {
                         {myRecordings.map(rec => (
                           <li key={rec.id} style={{ marginBottom: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
                             <audio src={rec.url} controls style={{ width: 160 }} />
-                            <span style={{ fontSize: 13, color: '#888' }}>{rec.fileName} / {formatUploadedAt((rec as any).uploadedAt)}</span>
+                            <span style={{ fontSize: 13, color: '#888' }}>{rec.fileName}</span>
                           </li>
                         ))}
                       </ul>
@@ -673,10 +673,9 @@ function App() {
 export default App;
 
 // 학생별 연습 결과(녹음) 목록 컴포넌트
-import React from 'react';
 function StudentResultsList({ studentId }: { studentId: string }) {
-  const [results, setResults] = React.useState<{ id: string; url: string; fileName: string }[]>([]);
-  React.useEffect(() => {
+  const [results, setResults] = useState<{ id: string; url: string; fileName: string }[]>([]);
+  useEffect(() => {
     const unsub = onSnapshot(collection(db, `students/${studentId}/results`), (snap) => {
       setResults(snap.docs.map(doc => ({ id: doc.id, ...doc.data() as any })));
     });
@@ -688,7 +687,7 @@ function StudentResultsList({ studentId }: { studentId: string }) {
       {results.map(rec => (
         <li key={rec.id} style={{ marginBottom: 6, display: 'flex', alignItems: 'center', gap: 8 }}>
           <audio src={rec.url} controls style={{ width: 160 }} />
-          <span style={{ fontSize: 13, color: '#888' }}>{rec.fileName} / {formatUploadedAt((rec as any).uploadedAt)}</span>
+          <span style={{ fontSize: 13, color: '#888' }}>{rec.fileName}</span>
         </li>
       ))}
     </ul>
